@@ -26,9 +26,9 @@ public class Demo
         return gen0;
     }
 
-    public static void main(String[] args){
-
-        ArrayList<Solution> gen0 = inicializa(1000);
+    public static void main(String[] args)
+    {
+        ArrayList<Solution> gen0 = inicializa(100);
 
         Collections.sort(gen0, Collections.reverseOrder()); //individuos ou genes, com o fitness maior (mais semelhante da palavra misterio)
 
