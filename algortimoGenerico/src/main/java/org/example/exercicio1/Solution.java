@@ -1,21 +1,24 @@
 package org.example.exercicio1;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class Solution implements Comparable<Solution>
 {
     private final int SIZEWORD = 6;
-    StringBuffer word;
+    String wordSecret;
     StringBuffer sol;
+    int total = 0;
 
 
     /**
      * construtor para inicializar a população com o tamanho de n individuos
-     * @param word
+     * @param wordSecret
      */
-    public Solution(StringBuffer word)
+    public Solution(StringBuffer wordSecret)
     {
-        this.word = word;
+        this.wordSecret = String.valueOf(wordSecret);
         this.sol = new StringBuffer();
 
         Random random = new Random();
@@ -30,12 +33,11 @@ public class Solution implements Comparable<Solution>
 
             sol.append(randomChar);//coloca na palavra
         }
-
     }
 
 
-    public StringBuffer getWord() {
-        return word;
+    public String getWordSecret() {
+        return wordSecret;
     }
 
     public StringBuffer getSol() {
@@ -77,14 +79,28 @@ public class Solution implements Comparable<Solution>
     @Override
     public int compareTo(Solution o)
     {
-        if(this.getFitnessFunction() > o.getFitnessFunction()) //se a funcao fitness atual for maior que a seguinte (melhor solucao)
+        try
         {
-            return 1;
+            if(this.getFitnessFunction() > o.getFitnessFunction()) //se a funcao fitness atual for maior que a seguinte (melhor solucao)
+            {
+                return 1;
+            }
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException(e);
         }
 
-        if(this.getFitnessFunction() < o.getFitnessFunction())
+        try
         {
-            return -1;
+            if(this.getFitnessFunction() < o.getFitnessFunction())
+            {
+                return -1;
+            }
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException(e);
         }
 
         return 0;
@@ -92,11 +108,19 @@ public class Solution implements Comparable<Solution>
 
 
     @Override
-    public String toString() {
-        return "Solution{" +
-                "word = " + sol +
-                ", function fitness = " + getFitnessFunction() +
-                '}';
+    public String toString()
+    {
+        try
+        {
+            return "Solution{" +
+                    "word = " + sol +
+                    ", function fitness = " + getFitnessFunction() + " "+percentage(total)+"%" +
+                    '}';
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
     }
 
 
@@ -104,18 +128,76 @@ public class Solution implements Comparable<Solution>
      * procurar a palavra mais semelhante a palavra escondida
      * @return a quantidade de letras iguais
      */
-    private int getFitnessFunction()
-    {
-        int total=0;
-
-        for(int i=0; i < this.sol.length(); i++)
+    private int getFitnessFunction() throws Exception {
+        total=0;
+        /*for(int i=0; i < this.sol.length(); i++)
         {
-            if(sol.charAt(i) == word.charAt(i))
+            if(sol.charAt(i) == wordSecret.charAt(i))
             {
                 total++;
             }
+        }   */
+
+        List<Integer> result = evaluate(sol);
+
+        for(int i=0; i < result.size(); i++) //somar a metrica de cada letra para assim se saber a metrica da palavra (-6 - pior cenario | 6 - melhor cenario)
+        {
+            total += result.get(i);
         }
 
         return total;
+    }
+
+    /**
+     * calcula a percentagem de semelhança da palavra com a palavra misterio
+     * @param total
+     * @return
+     */
+    private float percentage(int total)
+    {
+        float percent = ((float) (total - (-6)) / (6 - (-6))) * 100;
+
+        return Float.parseFloat(String.format("%.2f", percent));
+    }
+
+
+
+    /**
+     * devolve uma metrica de semelhança entre 2 palavras ao estilo do jogo wordle
+     * @param sol
+     * @return array de inteiros com o mesmo nº de posições da palavra a adivinhar em que:
+     * -1 - o caracter nessa posicao nao existe na palavra a adivinhar
+     * 0 - o caracter nessa posicao existe na palavra a adivinhar, mas está na posicao errada
+     * 1 - o caracter nessa posicao existe na palavra a adivinhar e está na posicao correta
+     */
+    public List<Integer> evaluate(StringBuffer sol) throws Exception
+    {
+        if(sol.length() != wordSecret.length())
+        {
+            new Exception("ERRO: palavras com tamanhos diferentes !");
+        }
+
+        List<Integer> result = new ArrayList<>();
+
+
+        for(int i=0; i < wordSecret.length(); i++)
+        {
+            if(sol.charAt(i) == wordSecret.charAt(i))
+            {
+                result.add(1);
+            }
+
+            else if(wordSecret.contains(String.valueOf(sol.charAt(i)))) //existe mas ta na posicao errada
+            {
+                result.add(0);
+            }
+
+            else //n existe
+            {
+                result.add(-1);
+            }
+        }
+
+        return result;
     }
 }
