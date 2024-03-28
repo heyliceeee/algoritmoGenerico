@@ -2,30 +2,48 @@ package org.example.exercicio2;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
-public class Solution implements Comparable<Solution>
+public class Individuo implements Comparable<Individuo>
 {
-    List<Objeto> objetosList = new ArrayList<>();
+    private List<Boolean> cromossomo; // Representação binária dos objetos na mochila
+    private double fitness;
+    private double fitnessPorcentage;
 
-    public Solution()
+    public Individuo(int tamanhoCromossomo)
     {
-        objetosList.add(new Objeto("Espada Mágica", 2.5, 100.0));
-        objetosList.add(new Objeto("Poção de Cura", 0.5, 50.0));
-        objetosList.add(new Objeto("Pedra Preciosa", 0.2, 200.0));
-        objetosList.add(new Objeto("Escudo de Ouro", 3.0, 150.0));
-        objetosList.add(new Objeto("Espada de Aço", 2.5, 50.0));
-        objetosList.add(new Objeto("Poção de Cura", 0.2, 30.0));
-        objetosList.add(new Objeto("Elmo de Ferro", 1.8, 80.0));
-        objetosList.add(new Objeto("Pergaminho de Teleporte", 0.1, 500.0));
-        objetosList.add(new Objeto("Gema Preciosa", 0.05, 200.0));
-        objetosList.add(new Objeto("Adaga Envenenada", 1.0, 80.0));
-        objetosList.add(new Objeto("Anel de Poder", 0.3, 300.0));
-        objetosList.add(new Objeto("Amuleto da Sorte", 0.1, 150.0));
-        objetosList.add(new Objeto("Lanterna Mágica", 0.8, 120.0));
-        objetosList.add(new Objeto("Botas Velozes", 0.6, 180.0));
-        objetosList.add(new Objeto("Coroa de Diamante", 0.7, 500.0));
+        this.cromossomo = new ArrayList<>(tamanhoCromossomo);
+        Random rand = new Random();
+
+        for (int i = 0; i < tamanhoCromossomo; i++)
+        {
+            this.cromossomo.add(rand.nextBoolean());
+        }
     }
 
+    public List<Boolean> getCromossomo() {
+        return cromossomo;
+    }
+
+    public double getFitness() {
+        return fitness;
+    }
+
+    public void setFitness(double fitness) {
+        this.fitness = fitness;
+    }
+
+    public void setCromossomo(List<Boolean> cromossomo) {
+        this.cromossomo = cromossomo;
+    }
+
+    public double getFitnessPorcentage() {
+        return fitnessPorcentage;
+    }
+
+    public void setFitnessPorcentage(double fitnessPorcentage) {
+        this.fitnessPorcentage = fitnessPorcentage;
+    }
 
     /**
      * Compares this object with the specified object for order.  Returns a
@@ -60,19 +78,15 @@ public class Solution implements Comparable<Solution>
      * inconsistent with equals."
      */
     @Override
-    public int compareTo(Solution o)
+    public int compareTo(Individuo o)
     {
-        if(this.getFitnessFunction() > o.getFitnessFunction()) //se a funcao fitness atual for maior que a seguinte (melhor solucao)
-        {
-            return 1;
-        }
-
-        if(this.getFitnessFunction() < o.getFitnessFunction()) //se a funcao fitness atual for menor que a seguinte (melhor solucao)
-        {
-            return -1;
-        }
+        // Comparação para ordenar em ordem decrescente de fitness
+        return Double.compare(this.getFitness(), o.getFitness());
+    }
 
 
-        return 0;
+    @Override
+    public String toString() {
+        return "Cromossomo: " + cromossomo + ", Fitness: " + fitness + " ("+String.format("%.2f", fitnessPorcentage)+"%)";
     }
 }
