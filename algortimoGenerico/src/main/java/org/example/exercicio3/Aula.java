@@ -1,5 +1,8 @@
 package org.example.exercicio3;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Aula
 {
     private Turma turma;
@@ -17,6 +20,40 @@ public class Aula
         this.sala = sala;
     }
 
+    public static List<Aula> obterTodasAulasAgendadas()
+    {
+        List<Aula> todasAulasAgendadas = new ArrayList<>();
+
+        List<Horario> horarios = Populacao.getHorarios(); // obter todos os horários
+
+        // Percorre todos os horários para obter as aulas agendadas de cada horário
+        for (Horario horario : horarios)
+        {
+            todasAulasAgendadas.addAll(horario.getAulas());
+        }
+
+        return todasAulasAgendadas;
+    }
+
+
+    private List<Aula> obterAulasAgendadasParaSala(Sala sala)
+    {
+        List<Aula> aulasAgendadas = sala.getAulasAgendadas();
+
+        // Suponha que você tenha uma lista de todas as aulas agendadas em seu sistema
+        for (Aula aula : aulasAgendadas)
+        {
+            if (aula.getSala().equals(sala))
+            {
+                aulasAgendadas.add(aula);
+            }
+        }
+
+        return aulasAgendadas;
+    }
+
+
+    //region GETTERS E SETTERS
 
     public Turma getTurma() {
         return turma;
@@ -26,11 +63,11 @@ public class Aula
         this.turma = turma;
     }
 
-    public org.example.exercicio3.UC getUC() {
+    public UC getUC() {
         return UC;
     }
 
-    public void setUC(org.example.exercicio3.UC UC) {
+    public void setUC(UC UC) {
         this.UC = UC;
     }
 
@@ -56,5 +93,19 @@ public class Aula
 
     public void setSala(Sala sala) {
         this.sala = sala;
+    }
+
+    //endregion
+
+
+    @Override
+    public String toString() {
+        return "Aula{" +
+                "turma=" + turma +
+                ", UC=" + UC +
+                ", docente=" + docente +
+                ", blocoHoras=" + blocoHoras +
+                ", sala=" + sala +
+                '}';
     }
 }

@@ -2,6 +2,7 @@ package org.example.exercicio3;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Demo
@@ -18,9 +19,24 @@ public class Demo
         // Calcular o valor de fitness para cada horário na população
         for (Horario horario : horariosList)
         {
-            double fitness = Fitness.calcularFitness(horario);
-            // Faça algo com o valor de fitness, como armazenar em uma lista ou exibir na tela
-            System.out.println("Fitness do horário: " + fitness);
+            horario.setFitness(Fitness.calcularFitness(horario));
+        }
+
+        Collections.sort(horariosList, Collections.reverseOrder());
+
+
+        for (Horario horario : horariosList)
+        {
+            System.out.println("-----------------------------------------------------------------------------------------------------");
+            System.out.println("|  Turma  |     UC    |     Docente    | Início | Fim | Bloco |  Sala  |");
+            System.out.println("-----------------------------------------------------------------------------------------------------");
+            for (Aula aula : horario.getAulas()) {
+                System.out.printf("|%-9s|%-11s|%-16s|%-8s|%-5s|%-7s|%-7s|\n", aula.getTurma().getId(), aula.getUC().getNome(), aula.getDocente().getNome(), aula.getBlocoHoras().getHoraInicio(), aula.getBlocoHoras().getHoraFim(), aula.getBlocoHoras().getId(), aula.getSala().getId());
+            }
+            System.out.println("-----------------------------------------------------------------------------------------------------");
+            System.out.printf("Fitness: %.2f\n", horario.getFitness());
+            System.out.println("-----------------------------------------------------------------------------------------------------");
+        }
         }
     }
-}
+

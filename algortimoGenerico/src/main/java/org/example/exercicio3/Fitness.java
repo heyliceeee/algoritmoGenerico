@@ -14,7 +14,7 @@ public class Fitness
         double utilizacaoSalas = calcularUtilizacaoSalas(horario);
 
         // Retornar um valor de fitness geral
-        return 1.0 / (sobreposicoes + 1) * utilizacaoSalas; // Quanto menos sobreposições, melhor o fitness
+        return Double.parseDouble(String.format("%.2f", 1.0 / (sobreposicoes + 1) * utilizacaoSalas)); // Quanto menos sobreposições, melhor o fitness
     }
 
     private static double calcularUtilizacaoSalas(Horario horario)
